@@ -34,7 +34,7 @@ def parse_stats(subjects_dir, subject):
 
         def extract_other_vals_from_aseg(f):
             #line_numbers = [18,23,21,33,22]
-            line_numbers = [19,22,24,34]
+            line_numbers = [15, 20, 22]
             output = pd.DataFrame()
             with open(f,"r") as q:
                 out = q.readlines()
@@ -100,12 +100,11 @@ def parse_stats(subjects_dir, subject):
 # They can be loaded into the Mindcontrol database later
 
 def create_mindcontrol_entries(mindcontrol_base_dir, output_dir, subject, stats):
-    import os
+    import oss
     from nipype.utils.filemanip import save_json
     
-    metric_split = {"brainmask": ["eTIV", "CortexVol", "TotalGrayVol"],
-                    "wm": ["WM-hypointensities", 
-                           "Right-WM-hypointensities","Left-WM-hypointensities"],
+    metric_split = {"brainmask": ["ICV", "CortexVol", "TotalGrayVol"],
+                    "wm": [ "Right-WM-hypointensities","Left-WM-hypointensities"],
                     "aparcaseg":[],
                     "ribbon":[]}
     print(metric_split)
