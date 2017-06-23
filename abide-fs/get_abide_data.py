@@ -44,7 +44,8 @@ for subject in subjects_list:
     if download_type == "fs":
         os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(fsdir, fs_outdir))
     elif download_type == "bids":
-	os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(bidsdir, bids_outdir))
+	print "test"
+     	# os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(bidsdir, bids_outdir))
     elif download_type == "both":
 	os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(fsdir, fs_outdir))
 	os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(bidsdir, bids_outdir))
@@ -53,5 +54,5 @@ for subject in subjects_list:
 
 
 if download_type == "bids" or download_type == "both":
-    os.system('docker run -v {}/data/bids'.format(mcdir))
+    os.system('docker run -v {}:/data/bids crocodoyle/ibis-bids-qc'.format(mcdir))
 
