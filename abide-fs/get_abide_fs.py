@@ -27,11 +27,15 @@ with open(subjfile) as subjects:
         subjects_list.append(subject.strip('\n'))
 
 # get data from amazon s3
-abide_url = 's3://fcp-indi/data/Projects/ABIDE_Initiative/Outputs/'
-fspath = 'freesurfer/5.1/'
+abide_url = 's3://fcp-indi/data/Projects/ABIDE_Initiative/'
+fspath = 'Outputs/freesurfer/5.1/'
+bidspath = 'RawDataBIDS/Caltech/'
 
 for subject in subjects_list:
-    fsdir = os.path.join(abide_url, fspath, subj)
-    outdir = os.path.join(datadir, 'derivatives', 'freesurfer', subject)
-    mkdir_p(outdir)
-    os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(fsdir, outdir))
+    fsdir = abide_url + fspath + subj
+    bidsdir = abide_url + bidspath + subj
+    fs_outdir = os.path.join(datadir, 'derivatives', 'freesurfer', subject)
+    bids_outdir = os.path.join(subject)
+    os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(fsdir, fs_outdir))
+    os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(bidsdir, bids_outdir))
+    
