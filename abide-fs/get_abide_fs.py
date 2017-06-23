@@ -6,7 +6,7 @@
 
 import os, sys, errno
 
-subjfile = sys.argv[1]
+subjfile, download_type = sys.argv[1:]
 mcdir = os.getcwd()
 
 def mkdir_p(path):
@@ -20,6 +20,8 @@ def mkdir_p(path):
 
 datadir = os.path.join(mcdir, 'data')
 mkdir_p(datadir)
+if download_type == "bids" or download_type == "both":
+    mkdir_p(os.path.join(datadir,'bids'))
 
 subjects_list = []
 with open(subjfile) as subjects:
@@ -36,6 +38,16 @@ for subject in subjects_list:
     bids_subject = "sub-" + subject.split('_')[1]
     bidsdir = abide_url + bidspath + bids_subject
     fs_outdir = os.path.join(datadir, 'derivatives', 'freesurfer', subject)
-    bids_outdir = os.path.join(datadir, bids_subject)
-    os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(fsdir, fs_outdir))
-    os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(bidsdir, bids_outdir))
+    bids_outdir = os.path.join(datadir, 'bids', bids_subject)
+    
+    if download_type == "fs":
+        os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(fsdir, fs_outdir))
+    elif download_type == "bids":
+	os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(bidsdir, bids_outdir))
+    elif download_type == "both":
+	os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(fsdir, fs_outdir))
+	os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(bidsdir, bids_outdir))
+    else:
+	print "Invalid download type. Choose 'fs', 'bids', or 'both'."
+
+
