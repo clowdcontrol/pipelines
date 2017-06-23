@@ -2,9 +2,9 @@
 
 # requires awscli: install using pip install awscli
 # usage: python get_abide_fs.py /path/to/subject_file
-# run from derired output directory
+# run from desired output directory
 
-import os, sys, errno, subprocess
+import os, sys, errno
 
 subjfile = sys.argv[1]
 mcdir = os.getcwd()
@@ -27,11 +27,14 @@ with open(subjfile) as subjects:
         subjects_list.append(subject.strip('\n'))
 
 # get data from amazon s3
-abide_url = 's3://fcp-indi/data/Projects/ABIDE_Initiative/Outputs/'
-fspath = 'freesurfer/5.1/'
+abide_url = 's3://fcp-indi/data/Projects/ABIDE_Initiative/'
+fspath = 'Outputs/freesurfer/5.1/'
+bidspath = 'RawDataBIDS/Caltech/'
 
 for subject in subjects_list:
-    fsdir = os.path.join(abide_url, fspath, subject)
-    outdir = os.path.join(datadir, 'derivatives', 'freesurfer', subject)
-    mkdir_p(outdir)
-    os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(fsdir, outdir))
+    fsdir = abide_url + fspath + subject
+    bidsdir = abide_url + bidspath + subject
+    fs_outdir = os.path.join(datadir, 'derivatives', 'freesurfer', subject)
+    bids_outdir = os.path.join(subject)
+    os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(fsdir, fs_outdir))
+    os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(bidsdir, bids_outdir))

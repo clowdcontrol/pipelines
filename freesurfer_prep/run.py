@@ -1,5 +1,7 @@
 import os
 import os.path as op
+import uuid
+import shutil
 from glob import glob
 from nipype import MapNode, Workflow, Node
 from nipype.interfaces.freesurfer import MRIConvert
@@ -34,16 +36,13 @@ def parse_stats(subjects_dir, subject):
 
         def extract_other_vals_from_aseg(f):
             #line_numbers = [18,23,21,33,22]
-            line_numbers = [19,22,24,34]
+            line_numbers = [15, 20, 22]
             output = pd.DataFrame()
             with open(f,"r") as q:
                 out = q.readlines()
-                print('#@#' + str(len(out)))
                 for line in line_numbers:
                     sname= out[line].split(",")[1][1:]
-                    print('#@#' + str(sname))
                     vol = out[line].split(",")[-2]
-                    print('#@#' + str(vol))
                     output = output.append(pd.Series({"StructName":sname,"Volume_mm3":vol}),ignore_index=True)
             return output
 
@@ -103,12 +102,10 @@ def create_mindcontrol_entries(mindcontrol_base_dir, output_dir, subject, stats)
     import os
     from nipype.utils.filemanip import save_json
     
-    metric_split = {"brainmask": ["eTIV", "CortexVol", "TotalGrayVol"],
-                    "wm": ["WM-hypointensities", 
-                           "Right-WM-hypointensities","Left-WM-hypointensities"],
+    metric_split = {"brainmask": ["ICV", "CortexVol", "TotalGrayVol"],
+                    "wm": [ "Right-WM-hypointensities","Left-WM-hypointensities"],
                     "aparcaseg":[],
                     "ribbon":[]}
-    print(metric_split)
     volumes = ["brainmask.mgz", "wm.mgz", "aparc+aseg.mgz", "ribbon.mgz", "T1.mgz" ]
     volumes_list = [os.path.join(output_dir, subject, volume) for volume in volumes]
 
@@ -118,10 +115,9 @@ def create_mindcontrol_entries(mindcontrol_base_dir, output_dir, subject, stats)
         entry = {"entry_type": entry_type, 
                  "subject_id": subject, 
                  "name": subject}
-        print(volumes_list)
         base_img = os.path.relpath(volumes_list[-1], mindcontrol_base_dir)
         overlay_img = os.path.relpath(volumes_list[idx], mindcontrol_base_dir)
-        entry["check_masks"] = [base_img, overlay_img]
+        entry["check_masks"] = [base_img.replace(".mgz",".nii.gz"), overlay_img.replace(".mgz",".nii.gz")]
         entry["metrics"] = {}
         for metric_name in metric_split[entry_type]:
             entry["metrics"][metric_name] = stats.pop(metric_name)
@@ -141,7 +137,7 @@ def run_workflow(bids_dir):
     subjects_dir = os.path.join(bids_dir, "derivatives", "freesurfer")
     mindcontrol_base_dir = os.path.join(bids_dir, "derivatives", "mindcontrol_freesurfer")
     mindcontrol_outdir = mindcontrol_base_dir
-    workflow_working_dir = os.path.join(mindcontrol_base_dir, "scratch")
+    workflow_working_dir = os.path.join(mindcontrol_base_dir, "scratch"+"_"+str(uuid.uuid4()))
 
     subject_paths = glob(op.join(subjects_dir, "*"))
 
@@ -203,9 +199,16 @@ def run_workflow(bids_dir):
     wf.connect(dg_node,"volume_paths", mriconvert_node, "in_file")
     wf.connect(mriconvert_node,'out_file',datasink_node,'out_file')
     wf.connect(write_mindcontrol_entries, "output_json", datasink_node, "out_file.@json")
-
-
     wf.run()
+
+    shutil.rmtree(workflow_working_dir)
+    from nipype.utils.filemanip import load_json, save_json
+
+    files = glob(os.path.join(mindcontrol_base_dir, "*", "mindcontrol_entries.json"))
+    output = []
+    for f in files:
+        output.append(load_json(f))
+    save_json(os.path.join(mindcontrol_base_dir, "all_entries.json"), output)
 
 if __name__ == '__main__':
     Fire(run_workflow)
