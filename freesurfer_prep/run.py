@@ -100,7 +100,7 @@ def parse_stats(subjects_dir, subject):
 # They can be loaded into the Mindcontrol database later
 
 def create_mindcontrol_entries(mindcontrol_base_dir, output_dir, subject, stats):
-    import oss
+    import os
     from nipype.utils.filemanip import save_json
     
     metric_split = {"brainmask": ["ICV", "CortexVol", "TotalGrayVol"],
