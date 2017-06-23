@@ -4,6 +4,7 @@
 # usage: python get_abide_fs.py /path/to/subject_file
 # run from desired output directory
 # runs QC by Andrew Doyle (docker pull crocodoyle/ibis-bids-qc)
+from __future__ import print_functions
 
 import os, sys, errno
 
@@ -21,8 +22,6 @@ def mkdir_p(path):
 
 datadir = os.path.join(mcdir, 'data')
 mkdir_p(datadir)
-if download_type == "bids" or download_type == "both":
-    mkdir_p(os.path.join(datadir,'bids'))
 
 subjects_list = []
 with open(subjfile) as subjects:
@@ -39,17 +38,17 @@ for subject in subjects_list:
     bids_subject = "sub-" + subject.split('_')[1]
     bidsdir = abide_url + bidspath + bids_subject
     fs_outdir = os.path.join(datadir, 'derivatives', 'freesurfer', subject)
-    bids_outdir = os.path.join(datadir, 'bids', bids_subject)
+    bids_outdir = os.path.join(datadir,  bids_subject)
     
     if download_type == "fs":
         os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(fsdir, fs_outdir))
     elif download_type == "bids":
-     	os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(bidsdir, bids_outdir))
+       os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(bidsdir, bids_outdir))
     elif download_type == "both":
-	os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(fsdir, fs_outdir))
-	os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(bidsdir, bids_outdir))
+       os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(fsdir, fs_outdir))
+       os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(bidsdir, bids_outdir))
     else:
-	print "Invalid download type. Choose 'fs', 'bids', or 'both'."
+       print("Invalid download type. Choose 'fs', 'bids', or 'both'.")
 
 
 if download_type == "bids" or download_type == "both":
