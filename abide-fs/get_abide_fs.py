@@ -31,7 +31,7 @@ abide_url = 's3://fcp-indi/data/Projects/ABIDE_Initiative/Outputs/'
 fspath = 'freesurfer/5.1/'
 
 for subject in subjects_list:
-    outdir = os.path.join(datadir, 'derivatives', 'freesurfer', subject)
     fsdir = os.path.join(abide_url, fspath, subj)
+    outdir = os.path.join(datadir, 'derivatives', 'freesurfer', subject)
     mkdir_p(outdir)
     os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(fsdir, outdir))
