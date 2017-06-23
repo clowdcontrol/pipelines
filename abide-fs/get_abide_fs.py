@@ -1,6 +1,6 @@
-#!/bin/bash
 
 # requires awscli: install using pip install awscli
+# run from mindcontrol directory
 
 import os, sys, errno, subprocess
 subjfile = sys.argv[1]
