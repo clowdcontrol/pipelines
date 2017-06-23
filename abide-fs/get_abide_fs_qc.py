@@ -44,8 +44,7 @@ for subject in subjects_list:
     if download_type == "fs":
         os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(fsdir, fs_outdir))
     elif download_type == "bids":
-	print "test"
-     	# os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(bidsdir, bids_outdir))
+     	os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(bidsdir, bids_outdir))
     elif download_type == "both":
 	os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(fsdir, fs_outdir))
 	os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(bidsdir, bids_outdir))
