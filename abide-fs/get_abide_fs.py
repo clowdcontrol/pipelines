@@ -2,9 +2,9 @@
 
 # requires awscli: install using pip install awscli
 # usage: python get_abide_fs.py /path/to/subject_file
-# run from derired output directory
+# run from desired output directory
 
-import os, sys, errno, subprocess
+import os, sys, errno
 
 subjfile = sys.argv[1]
 mcdir = os.getcwd()
