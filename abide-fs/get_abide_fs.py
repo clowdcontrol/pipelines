@@ -36,6 +36,6 @@ for subject in subjects_list:
     bids_subject = "sub-" + subject.split('_')[1]
     bidsdir = abide_url + bidspath + bids_subject
     fs_outdir = os.path.join(datadir, 'derivatives', 'freesurfer', subject)
-    bids_outdir = os.path.join(bids_subject)
+    bids_outdir = os.path.join(datadir, bids_subject)
     os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(fsdir, fs_outdir))
     os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(bidsdir, bids_outdir))
