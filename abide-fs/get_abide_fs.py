@@ -32,10 +32,9 @@ fspath = 'Outputs/freesurfer/5.1/'
 bidspath = 'RawDataBIDS/Caltech/'
 
 for subject in subjects_list:
-    fsdir = abide_url + fspath + subj
-    bidsdir = abide_url + bidspath + subj
+    fsdir = abide_url + fspath + subject
+    bidsdir = abide_url + bidspath + subject
     fs_outdir = os.path.join(datadir, 'derivatives', 'freesurfer', subject)
     bids_outdir = os.path.join(subject)
     os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(fsdir, fs_outdir))
     os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(bidsdir, bids_outdir))
-    
