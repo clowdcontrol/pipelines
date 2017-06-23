@@ -15,7 +15,7 @@ def mkdir_p(path):
         else:
             raise
 
-datadir = mcdir + '/data/'
+datadir = os.path.join(mcdir, 'data')
 mkdir_p(datadir)
 
 text_file = open(mcdir + '/' + subjfile, "r")
@@ -29,6 +29,6 @@ abide_url = 's3://fcp-indi/data/Projects/ABIDE_Initiative/Outputs/'
 fspath = 'freesurfer/5.1/'
 
 for s in range(len(subjids)):
-    outdir = datadir + subjids[s] + '/derivatives/freesurfer/'
-    fsdir = abide_url + fspath + subjids[s]
+    outdir = os.path.join(datadir, 'derivatives', 'freesurfer', subjids[s])
+    fsdir = os.path.join(abide_url, fspath, subjids[s])
     os.system('aws s3 cp --recursive --no-sign-request {} {}'.format(fsdir, outdir))
