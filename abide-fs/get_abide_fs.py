@@ -3,7 +3,7 @@
 # requires awscli: install using pip install awscli
 # usage: python get_abide_fs.py /path/to/subject_file
 # run from desired output directory
-from __future__ import print_functions
+from __future__ import print_function
 
 import os, sys, errno
 
