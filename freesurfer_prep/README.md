@@ -10,5 +10,5 @@ docker build -t freesurfer_prep .
 docker run -it --rm -v /path/to/bids_dir:/data clowdcontrol/freesurfer_prep
 ```
 
-## ... or run directly from the DockerHub image (Current verision is v0.2)
+## ... or run directly from the [DockerHub](https://hub.docker.com/r/clowdcontrol/freesurfer_prep/) image (Current verision is v0.2)
 ```docker run -it --rm -v /path/to/bids_dir:/data clowdcontrol/freesurfer_prep:v0.2```
