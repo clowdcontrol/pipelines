@@ -1,10 +1,13 @@
 # Brief instructions
-# Clone repo and cd into the directory
+## Build and run the docker container from source 
+### Clone repo and cd into the directory
 ``` 
 git clone https://github.com/clowdcontrol/pipelines/tree/master/freesurfer_prep
 cd freesurfer_prep
-```
-# Build docker container:
-```docker build -t freesurfer_prep .```
-# Run container
+
+docker build -t freesurfer_prep .
+
+docker run -it --rm -v /path/to/bids_dir:/data clowdcontrol/freesurfer_prep```
+
+## ... or run directly from the DockerHub image (Current verision is v0.2)
 ```docker run -it --rm -v /path/to/bids_dir:/data clowdcontrol/freesurfer_prep:v0.2```
