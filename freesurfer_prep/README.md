@@ -7,4 +7,4 @@ cd freesurfer_prep
 # Build docker container:
 ```docker build -t freesurfer_prep .```
 # Run container
-```docker run -it --rm -v /path/to/bids_dir:/data freesurfer_prep```
+```docker run -it --rm -v /path/to/bids_dir:/data clowdcontrol/freesurfer_prep```
