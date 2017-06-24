@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
-# requires awscli: install using pip install awscli
-# usage: python get_abide_fs.py /path/to/subject_file
+# requires awscli: install using:
+# - sudo apt-get install awscli
+# - pip install awscli
+# usage: python get_abide_fs.py /path/to/testsubjs.txt fs/bids/both
 # run from desired output directory
 from __future__ import print_function
 
