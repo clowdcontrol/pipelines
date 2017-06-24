@@ -117,7 +117,7 @@ def create_mindcontrol_entries(mindcontrol_base_dir, output_dir, subject, stats)
                  "name": subject}
         base_img = os.path.relpath(volumes_list[-1], mindcontrol_base_dir)
         overlay_img = os.path.relpath(volumes_list[idx], mindcontrol_base_dir)
-        entry["check_masks"] = [base_img, overlay_img]
+        entry["check_masks"] = [base_img.replace(".mgz",".nii.gz"), overlay_img.replace(".mgz",".nii.gz")]
         entry["metrics"] = {}
         for metric_name in metric_split[entry_type]:
             entry["metrics"][metric_name] = stats.pop(metric_name)
@@ -202,6 +202,13 @@ def run_workflow(bids_dir):
     wf.run()
 
     shutil.rmtree(workflow_working_dir)
+    from nipype.utils.filemanip import load_json, save_json
+
+    files = glob(os.path.join(mindcontrol_base_dir, "*", "mindcontrol_entries.json"))
+    output = []
+    for f in files:
+        output.append(load_json(f))
+    save_json(os.path.join(mindcontrol_base_dir, "all_entries.json"), output)
 
 if __name__ == '__main__':
     Fire(run_workflow)
