@@ -207,7 +207,7 @@ def run_workflow(bids_dir):
     files = glob(os.path.join(mindcontrol_base_dir, "*", "mindcontrol_entries.json"))
     output = []
     for f in files:
-        output.append(load_json(f))
+        output += load_json(f)
     save_json(os.path.join(mindcontrol_base_dir, "all_entries.json"), output)
 
 if __name__ == '__main__':
