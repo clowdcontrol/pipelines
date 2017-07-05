@@ -7,6 +7,7 @@ cd abide-fs
 # Build docker container:
 docker build -t abide-fs .
 ```
+# Build docker container:
 # Run container:
 docker run --rm -ti -v ${PWD}:/data -v </full/path/to/subjfile.txt>:/mysubs.txt clowdcontrol/abide-fs:v0.4 /mysubs.txt <download_option>
 (download_option = bids, fs, or both (to download both bids and freesurfer)
