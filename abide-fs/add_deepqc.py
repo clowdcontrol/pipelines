@@ -25,20 +25,12 @@ pwdfiles = os.listdir(os.getcwd())
 if 'old_all_entries.json' not in pwdfiles:
     os.system('cp all_entries.json old_all_entries.json')
 
-os.system('cp all_entries.json old_all_entries.json')
-
 with open(qcfile) as qcfile:
     qcdata = json.load(qcfile)
 
-qcdict = []
-for key, value in qcdata.iteritems():
-    temp = [key,value]
-    qcdict.append(temp)
-
-qc_ratings = []
-for s in range(len(qcdict)):
-    temp = qcdict[s][1][0:8]
-    qc_ratings.append(float(str(temp)))
+qckeys = qcdata.keys()
+for s in range(len(qcdata)):
+    qcdata[qckeys[s][-7:]] = qcdata.pop(qckeys[s])
 
 # add deepqc to all_entries
 
@@ -46,11 +38,14 @@ with open(fsfile) as fsfile:
     fsdata = json.load(fsfile)
 
 fsdata_qc = fsdata
-temp = fsdata_qc[0]
-for entry in range(len(fsdata)/3):
-    new_entry = fsdata_qc[entry*3+1] 
-    new_entry['metrics'][u'crocodoyle-qc'] = qc_ratings[entry]
-    fsdata_qc[entry*3+1] = new_entry
+ne = len(fsdata) / len(subjects_list)
+for entry in range(len(subjects_list)):
+    new_entry = fsdata_qc[entry*ne+1]
+    subjid = new_entry['subject_id'][-7:] 
+    rating = qcdata[subjid]
+    rating = float(rating)    
+    new_entry['metrics'][u'deepqc'] = rating
+    fsdata_qc[entry*ne+1] = new_entry
     
 # save new output file
 save_json("all_entries.json",fsdata_qc)
