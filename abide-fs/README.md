@@ -14,3 +14,7 @@ docker run --rm -ti -v ${PWD}:/data -v </full/path/to/subjfile.txt>:/mysubs.txt 
 ```
 download_option = bids, fs, or both (to download both bids and freesurfer)
 ```
+# Subject file for QC (subjs_qc.txt):
+```
+10 pass, 10 fail from KKI, Stanford, UM_1
+```
