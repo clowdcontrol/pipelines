@@ -54,3 +54,5 @@ for subject in subjects_list:
 if download_type == "bids" or download_type == "both":
     os.system('docker run -v {}:/data/bids crocodoyle/ibis-bids-qc > bids_qc_output.txt'.format(mcdir))
     os.system('python subjqc.py')
+    os.system('python add_deepqc.py {}'.format(subjfile))
+
